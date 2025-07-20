@@ -133,11 +133,22 @@ export const uploadFile = async (
 
           resolve(metadata);
         } catch (error) {
-          reject(new FileUploadError(
-            `Failed to get download URL for ${file.name}`,
-            'download-url-error',
-            file.name
-          ));
+          console.error('Download URL error:', error);
+          const firebaseError = error as any;
+          
+          if (firebaseError?.code === 'storage/unauthorized') {
+            reject(new FileUploadError(
+              `Firebase Storage permissions error. Please contact support or check Firebase Storage rules. File: ${file.name}`,
+              'storage-unauthorized',
+              file.name
+            ));
+          } else {
+            reject(new FileUploadError(
+              `Failed to get download URL for ${file.name}: ${firebaseError?.message || 'Unknown error'}`,
+              'download-url-error',
+              file.name
+            ));
+          }
         }
       }
     );
