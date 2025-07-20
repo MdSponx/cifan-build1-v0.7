@@ -1,0 +1,39 @@
+{
+  "navigation": {
+    "home": "Home",
+    "programs": "Programs", 
+    "competition": "Competition",
+    "events": "Events",
+    "awards": "Awards",
+    "news": "News",
+    "contact": "Contact",
+    "about": "About Us",
+    "account": "Account",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "settings": "Settings",
+    "language": "EN"
+  },
+  "hero": {
+    "title": "CIFAN",
+    "year": "2025",
+    "subtitle": "Chiang Mai Fantastic International Film Festival",
+    "subtitleThai": "เทศกาลภาพยนตร์แฟนตาสติกนานาชาติเชียงใหม่",
+    "tagline": "Where Fantasy Meets Reality in the Heart of Northern Thailand",
+    "date": "September 20-27, 2025",
+    "dateSubtext": "7 Days of Fantasy",
+    "location": "Railway Station Park",
+    "locationSubtext": "Chiang Mai, Thailand",
+    "submitFilm": "Submit Your Film",
+    "getTickets": "Get Tickets", 
+    "viewSchedule": "View Schedule",
+    "films": "Films",
+    "prizeMoney": "Prize Money",
+    "days": "Days",
+    "venues": "Venues",
+    "competitionTitle": "Short Film Competition",
+    "competitionTheme": "\"Chiang Mai Future\" Theme",
+    "totalPrize": "1,000,000 THB",
+    "totalPrizeSubtext": "Total Prize Money"
+  }
+}

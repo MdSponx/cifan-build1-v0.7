@@ -1,0 +1,39 @@
+{
+  "navigation": {
+    "home": "หน้าแรก",
+    "programs": "โปรแกรม",
+    "competition": "การแข่งขัน",
+    "events": "กิจกรรม", 
+    "awards": "รางวัล",
+    "news": "ข่าวสาร",
+    "contact": "ติดต่อ",
+    "about": "เกี่ยวกับเรา",
+    "account": "บัญชี",
+    "signIn": "เข้าสู่ระบบ",
+    "signUp": "สมัครสมาชิก",
+    "settings": "ตั้งค่า",
+    "language": "TH"
+  },
+  "hero": {
+    "title": "CIFAN",
+    "year": "2025",
+    "subtitle": "เทศกาลภาพยนตร์แฟนตาสติกนานาชาติเชียงใหม่",
+    "subtitleThai": "Chiang Mai Fantastic International Film Festival",
+    "tagline": "ที่ซึ่งจินตนาการพบกับความจริงในใจกลางภาคเหนือของไทย",
+    "date": "20-27 กันยายน 2568",
+    "dateSubtext": "7 วันแห่งจินตนาการ",
+    "location": "สวนสถานีรถไฟ",
+    "locationSubtext": "เชียงใหม่, ประเทศไทย",
+    "submitFilm": "ส่งผลงานภาพยนตร์",
+    "getTickets": "จองตั๋ว",
+    "viewSchedule": "ดูตารางกิจกรรม",
+    "films": "ภาพยนตร์",
+    "prizeMoney": "เงินรางวัล",
+    "days": "วัน",
+    "venues": "สถานที่",
+    "competitionTitle": "การแข่งขันภาพยนตร์สั้น",
+    "competitionTheme": "หัวข้อ \"อนาคตเชียงใหม่\"",
+    "totalPrize": "1,000,000 บาท",
+    "totalPrizeSubtext": "เงินรางวัลรวม"
+  }
+}
