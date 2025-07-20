@@ -17,8 +17,7 @@ export const GENRE_OPTIONS = [
   { value: 'surreal', label: { th: 'เหนือจริง / อาร์ตแฟนตาสติก', en: 'Surreal / Art Fantastic' } },
   { value: 'monster', label: { th: 'สัตว์ประหลาด / มอนสเตอร์', en: 'Monster' } },
   { value: 'magic', label: { th: 'เวทมนตร์ / ไสยศาสตร์', en: 'Magic / Supernatural' } },
-  { value: 'thriller', label: { th: 'ระทึกขวัญ (Thriller)', en: 'Thriller' } },
-  { value: 'other', label: { th: 'อื่นๆ', en: 'Other' } }
+  { value: 'thriller', label: { th: 'ระทึกขวัญ (Thriller)', en: 'Thriller' } }
 ];
 
 // File type configurations
