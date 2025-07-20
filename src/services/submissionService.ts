@@ -443,3 +443,5 @@ export class SubmissionService {
     });
   }
 }
+
+export { SubmissionService }
