@@ -63,7 +63,6 @@ export interface WorldFormData extends BaseFormData {
   directorEmail: string;
   directorRole: string;
   directorCustomRole?: string;
-  occupation?: string;
   
   // Crew Information
   crewMembers: CrewMember[];

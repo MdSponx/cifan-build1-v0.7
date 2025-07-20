@@ -160,8 +160,10 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
     }
     
     // School name only required for non-world forms
-    if (!isWorldForm && !crewFormData.schoolName.trim()) {
-      errors.schoolName = validationMessages.required;
+    if (!isWorldForm) {
+      if (!crewFormData.schoolName.trim()) {
+        errors.schoolName = validationMessages.required;
+      }
     }
     // Student ID is not required for crew members
     
@@ -194,8 +196,8 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       age: parseInt(crewFormData.age),
       phone: crewFormData.phone || undefined,
       email: crewFormData.email || undefined,
-      schoolName: crewFormData.schoolName,
-      studentId: crewFormData.studentId
+      schoolName: isWorldForm ? '' : crewFormData.schoolName,
+      studentId: isWorldForm ? '' : crewFormData.studentId
     };
 
     if (editingCrewId) {
@@ -239,8 +241,8 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       age: member.age.toString(),
       phone: member.phone || '',
       email: member.email || '',
-      schoolName: member.schoolName,
-      studentId: member.studentId
+      schoolName: isWorldForm ? '' : member.schoolName,
+      studentId: isWorldForm ? '' : member.studentId
     });
     setEditingCrewId(member.id);
     setShowCrewForm(true);
@@ -396,35 +398,6 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
               />
               <ErrorMessage error={crewFormErrors.email} />
             </div>
-            
-            <div>
-              <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.schoolName} {!isWorldForm && <span className="text-red-400">*</span>}
-              </label>
-              <input
-                type="text"
-                name="schoolName"
-                value={crewFormData.schoolName}
-                onChange={handleCrewInputChange}
-                disabled={!isWorldForm}
-                className={`w-full p-3 rounded-lg bg-white/10 border ${crewFormErrors.schoolName ? 'border-red-400' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
-              />
-              <ErrorMessage error={crewFormErrors.schoolName} />
-            </div>
-            
-            <div>
-              <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.studentId} {currentContent.optional}
-              </label>
-              <input
-                type="text"
-                name="studentId"
-                value={crewFormData.studentId}
-                onChange={handleCrewInputChange}
-                className={`w-full p-3 rounded-lg bg-white/10 border ${crewFormErrors.studentId ? 'border-red-400' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
-              />
-              <ErrorMessage error={crewFormErrors.studentId} />
-            </div>
           </div>
           <div className="flex gap-4 mt-4">
             <AnimatedButton
@@ -467,9 +440,11 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
                 <th className={`px-4 py-3 text-left ${getClass('subtitle')} text-white text-sm`}>
                   {currentContent.tableHeaders.age}
                 </th>
-                <th className={`px-4 py-3 text-left ${getClass('subtitle')} text-white text-sm`}>
-                  {currentContent.tableHeaders.school}
-                </th>
+                {!isWorldForm && (
+                  <th className={`px-4 py-3 text-left ${getClass('subtitle')} text-white text-sm`}>
+                    {currentContent.tableHeaders.school}
+                  </th>
+                )}
                 <th className={`px-4 py-3 text-center ${getClass('subtitle')} text-white text-sm`}>
                   {currentContent.tableHeaders.actions}
                 </th>
@@ -492,12 +467,14 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
                   <td className={`px-4 py-3 ${getClass('body')} text-white/90 text-sm`}>
                     {member.age}
                   </td>
-                  <td className={`px-4 py-3 ${getClass('body')} text-white/90 text-sm`}>
-                    <div>
-                      <div>{member.schoolName}</div>
-                      <div className="text-xs text-white/60">{member.studentId}</div>
-                    </div>
-                  </td>
+                  {!isWorldForm && (
+                    <td className={`px-4 py-3 ${getClass('body')} text-white/90 text-sm`}>
+                      <div>
+                        <div>{member.schoolName}</div>
+                        <div className="text-xs text-white/60">{member.studentId}</div>
+                      </div>
+                    </td>
+                  )}
                   <td className="px-4 py-3 text-center">
                     <div className="flex gap-2 justify-center">
                       <button

@@ -390,7 +390,6 @@ export class SubmissionService {
           directorEmail: worldData.directorEmail,
           directorRole: worldData.directorRole,
           directorCustomRole: worldData.directorCustomRole || null,
-          occupation: worldData.occupation || null,
           crewMembers: (worldData.crewMembers || []).map(member => ({
             fullName: member.fullName,
             fullNameTh: member.fullNameTh || null,
@@ -399,8 +398,8 @@ export class SubmissionService {
             age: member.age,
             phone: member.phone || null,
             email: member.email || null,
-            schoolName: member.schoolName || null,
-            studentId: member.studentId || null
+            schoolName: null,
+            studentId: null
           }))
         };
       }

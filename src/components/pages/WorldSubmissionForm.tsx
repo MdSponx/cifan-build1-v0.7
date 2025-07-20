@@ -85,14 +85,13 @@ const WorldSubmissionForm = () => {
       synopsis: "เรื่องย่อ (ไม่เกิน 200 คำ)",
       chiangmaiConnection: "ความเกี่ยวข้องกับเชียงใหม่",
       
-      directorName: "ชื่อ-นามสกุล ผู้กำกับ",
+      submitterName: "ชื่อ-นามสกุล ผู้ส่งผลงาน",
       age: "อายุ",
       phone: "เบอร์โทรศัพท์",
       email: "อีเมล",
       roleInFilm: "บทบาทในภาพยนตร์",
       selectRole: "เลือกบทบาท",
       specifyRole: "ระบุบทบาท",
-      occupation: "อาชีพ",
       
       filmFile: "ไฟล์ภาพยนตร์ (MP4, MOV)",
       posterFile: "โปสเตอร์ภาพยนตร์ (JPG, PNG)",
@@ -119,14 +118,13 @@ const WorldSubmissionForm = () => {
       synopsis: "Synopsis (max 200 words)",
       chiangmaiConnection: "Connection to Chiang Mai",
       
-      directorName: "Director Full Name",
+      submitterName: "Submitter Full Name",
       age: "Age",
       phone: "Phone Number",
       email: "Email",
       roleInFilm: "Role in Film",
       selectRole: "Select Role",
       specifyRole: "Specify Role",
-      occupation: "Occupation",
       
       filmFile: "Film File (MP4, MOV)",
       posterFile: "Film Poster (JPG, PNG)",
@@ -163,22 +161,22 @@ const WorldSubmissionForm = () => {
     if (!formData.chiangmaiConnection.trim()) errors.chiangmaiConnection = validationMessages.required;
 
     // Director Information
-    if (!formData.directorName.trim()) errors.directorName = validationMessages.required;
+    if (!formData.directorName.trim()) errors.submitterName = validationMessages.required;
     if (!formData.directorAge) {
-      errors.directorAge = validationMessages.required;
+      errors.submitterAge = validationMessages.required;
     } else {
       const age = parseInt(formData.directorAge);
-      if (!validateAge(age, 'WORLD')) errors.directorAge = validationMessages.invalidAge('WORLD');
+      if (!validateAge(age, 'WORLD')) errors.submitterAge = validationMessages.invalidAge('WORLD');
     }
-    if (!formData.directorPhone.trim()) errors.directorPhone = validationMessages.required;
+    if (!formData.directorPhone.trim()) errors.submitterPhone = validationMessages.required;
     if (!formData.directorEmail.trim()) {
-      errors.directorEmail = validationMessages.required;
+      errors.submitterEmail = validationMessages.required;
     } else if (!validateEmail(formData.directorEmail)) {
-      errors.directorEmail = validationMessages.invalidEmail;
+      errors.submitterEmail = validationMessages.invalidEmail;
     }
-    if (!formData.directorRole) errors.directorRole = validationMessages.required;
+    if (!formData.directorRole) errors.submitterRole = validationMessages.required;
     if (formData.directorRole === 'Other' && !formData.directorCustomRole?.trim()) {
-      errors.directorCustomRole = validationMessages.required;
+      errors.submitterCustomRole = validationMessages.required;
     }
 
     // Files
@@ -551,20 +549,20 @@ const WorldSubmissionForm = () => {
 
           {/* Section 3: Director Information */}
           {!submissionState.isSubmitting && (
-            <FormSection title={currentContent.directorInfoTitle} icon="👤">
+            <FormSection title={currentContent.submitterInfoTitle} icon="👤">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                  {currentContent.directorName} <span className="text-red-400">*</span>
+                  {currentContent.submitterName} <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
                   name="directorName"
                   value={formData.directorName}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorName ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterName ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
                 />
-                <ErrorMessage error={formErrors.directorName} />
+                <ErrorMessage error={formErrors.submitterName} />
               </div>
               
               <div>
@@ -577,9 +575,9 @@ const WorldSubmissionForm = () => {
                   value={formData.directorAge}
                   onChange={handleInputChange}
                   min="18"
-                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorAge ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterAge ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
                 />
-                <ErrorMessage error={formErrors.directorAge} />
+                <ErrorMessage error={formErrors.submitterAge} />
               </div>
               
               <div>
@@ -591,9 +589,9 @@ const WorldSubmissionForm = () => {
                   name="directorPhone"
                   value={formData.directorPhone}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorPhone ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterPhone ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
                 />
-                <ErrorMessage error={formErrors.directorPhone} />
+                <ErrorMessage error={formErrors.submitterPhone} />
               </div>
               
               <div>
@@ -605,9 +603,9 @@ const WorldSubmissionForm = () => {
                   name="directorEmail"
                   value={formData.directorEmail}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorEmail ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterEmail ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
                 />
-                <ErrorMessage error={formErrors.directorEmail} />
+                <ErrorMessage error={formErrors.submitterEmail} />
               </div>
               
               <div>
@@ -618,7 +616,7 @@ const WorldSubmissionForm = () => {
                   name="directorRole"
                   value={formData.directorRole || ''}
                   onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorRole ? 'border-red-400 error-field' : 'border-white/20'} text-white focus:border-[#FCB283] focus:outline-none`}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterRole ? 'border-red-400 error-field' : 'border-white/20'} text-white focus:border-[#FCB283] focus:outline-none`}
                 >
                   <option value="" className="bg-[#110D16]">{currentContent.selectRole}</option>
                   {['Director', 'Producer', 'Cinematographer', 'Editor', 'Sound Designer', 'Production Designer', 'Costume Designer', 'Makeup Artist', 'Screenwriter', 'Composer', 'Casting Director', 'Visual Effects Supervisor', 'Location Manager', 'Script Supervisor', 'Assistant Director', 'Other'].map(role => (
@@ -627,7 +625,7 @@ const WorldSubmissionForm = () => {
                     </option>
                   ))}
                 </select>
-                <ErrorMessage error={formErrors.directorRole} />
+                <ErrorMessage error={formErrors.submitterRole} />
               </div>
               
               {/* Custom Role - only show if Other is selected */}
@@ -641,25 +639,11 @@ const WorldSubmissionForm = () => {
                     name="directorCustomRole"
                     value={formData.directorCustomRole || ''}
                     onChange={handleInputChange}
-                    className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorCustomRole ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                    className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterCustomRole ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
                   />
-                  <ErrorMessage error={formErrors.directorCustomRole} />
+                  <ErrorMessage error={formErrors.submitterCustomRole} />
                 </div>
               )}
-              
-              <div>
-                <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                  {currentContent.occupation}
-                </label>
-                <input
-                  type="text"
-                  name="occupation"
-                  value={formData.occupation || ''}
-                  onChange={handleInputChange}
-                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.occupation ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
-                />
-                <ErrorMessage error={formErrors.occupation} />
-              </div>
             </div>
             </FormSection>
           )}
