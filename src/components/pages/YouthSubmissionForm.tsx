@@ -725,6 +725,7 @@ const YouthSubmissionForm = () => {
               crewMembers={formData.crewMembers}
               onCrewMembersChange={handleCrewMembersChange}
               isThaiNationality={isThaiNationality}
+              submitterSchoolName={formData.schoolName}
               error={formErrors.crewMembers}
             />
           )}

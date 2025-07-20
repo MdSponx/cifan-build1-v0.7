@@ -740,6 +740,7 @@ const FutureSubmissionForm = () => {
               crewMembers={formData.crewMembers}
               onCrewMembersChange={handleCrewMembersChange}
               isThaiNationality={isThaiNationality}
+              submitterUniversityName={formData.universityName}
               error={formErrors.crewMembers}
             />
           )}

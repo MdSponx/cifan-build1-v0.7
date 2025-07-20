@@ -398,7 +398,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
             
             <div>
               <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.studentId} <span className="text-red-400">*</span>
+                {currentContent.studentId} {currentContent.optional}
               </label>
               <input
                 type="text"

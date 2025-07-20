@@ -144,7 +144,10 @@ const WorldSubmissionForm = () => {
 
     // Film Information
     if (!formData.filmTitle.trim()) errors.filmTitle = validationMessages.required;
-    if (isThaiNationality && !formData.filmTitleTh?.trim()) errors.filmTitleTh = validationMessages.required;
+    // Thai film title only required for Thai nationality
+    if (isThaiNationality && !formData.filmTitleTh?.trim()) {
+      errors.filmTitleTh = validationMessages.required;
+    }
     if (!formData.genres || formData.genres.length === 0) errors.genres = validationMessages.required;
     if (!formData.format) errors.format = validationMessages.formatRequired;
     if (!formData.duration) {
