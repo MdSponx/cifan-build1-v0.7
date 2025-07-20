@@ -193,8 +193,7 @@ const getGenreEmoji = (genre: string): string => {
     'surreal': '🌀',
     'monster': '👹',
     'magic': '✨',
-    'thriller': '🔪',
-    'other': '🎬'
+    'thriller': '🔪'
   };
   
   return emojiMap[genre] || '🎭';

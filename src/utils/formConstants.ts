@@ -18,7 +18,6 @@ export const GENRE_OPTIONS = [
   { value: 'monster', label: { th: 'สัตว์ประหลาด / มอนสเตอร์', en: 'Monster' } },
   { value: 'magic', label: { th: 'เวทมนตร์ / ไสยศาสตร์', en: 'Magic / Supernatural' } },
   { value: 'thriller', label: { th: 'ระทึกขวัญ (Thriller)', en: 'Thriller' } },
-  { value: 'other', label: { th: 'อื่นๆ', en: 'Other' } }
 ];
 
 // File type configurations
