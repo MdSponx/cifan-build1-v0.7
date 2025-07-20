@@ -385,6 +385,7 @@ export class SubmissionService {
         submissionData = {
           ...baseData,
           directorName: worldData.directorName,
+          directorNameTh: worldData.directorNameTh || null,
           directorAge: parseInt(worldData.directorAge),
           directorPhone: worldData.directorPhone,
           directorEmail: worldData.directorEmail,

@@ -58,6 +58,7 @@ export interface YouthFormData extends BaseFormData {
 export interface WorldFormData extends BaseFormData {
   // Director Information
   directorName: string;
+  directorNameTh?: string;
   directorAge: string;
   directorPhone: string;
   directorEmail: string;

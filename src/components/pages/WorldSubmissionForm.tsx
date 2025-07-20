@@ -86,6 +86,7 @@ const WorldSubmissionForm = () => {
       chiangmaiConnection: "ความเกี่ยวข้องกับเชียงใหม่",
       
       submitterName: "ชื่อ-นามสกุล ผู้ส่งผลงาน",
+      submitterNameTh: "ชื่อ-นามสกุล (ภาษาไทย)",
       age: "อายุ",
       phone: "เบอร์โทรศัพท์",
       email: "อีเมล",
@@ -119,6 +120,7 @@ const WorldSubmissionForm = () => {
       chiangmaiConnection: "Connection to Chiang Mai",
       
       submitterName: "Submitter Full Name",
+      submitterNameTh: "Full Name (Thai)",
       age: "Age",
       phone: "Phone Number",
       email: "Email",
@@ -162,6 +164,10 @@ const WorldSubmissionForm = () => {
 
     // Director Information
     if (!formData.directorName.trim()) errors.submitterName = validationMessages.required;
+    // Thai name only required for Thai nationality
+    if (isThaiNationality && !formData.directorNameTh?.trim()) {
+      errors.submitterNameTh = validationMessages.required;
+    }
     if (!formData.directorAge) {
       errors.submitterAge = validationMessages.required;
     } else {
@@ -256,7 +262,8 @@ const WorldSubmissionForm = () => {
     if (!isThaiNationality) {
       setFormData(prev => ({
         ...prev,
-        filmTitleTh: ''
+        filmTitleTh: '',
+        directorNameTh: ''
       }));
     }
   }, []);
@@ -549,9 +556,9 @@ const WorldSubmissionForm = () => {
 
           {/* Section 3: Director Information */}
           {!submissionState.isSubmitting && (
-            <FormSection title={currentContent.submitterInfoTitle} icon="👤">
+            <FormSection title={currentContent.directorInfoTitle} icon="👤">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
+              <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
                   {currentContent.submitterName} <span className="text-red-400">*</span>
                 </label>
@@ -564,6 +571,23 @@ const WorldSubmissionForm = () => {
                 />
                 <ErrorMessage error={formErrors.submitterName} />
               </div>
+              
+              {/* Thai Name - only for Thai nationality */}
+              {isThaiNationality && (
+                <div>
+                  <label className={`block text-white/90 ${getClass('body')} mb-2`}>
+                    {currentContent.submitterNameTh} <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="directorNameTh"
+                    value={formData.directorNameTh || ''}
+                    onChange={handleInputChange}
+                    className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.submitterNameTh ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                  />
+                  <ErrorMessage error={formErrors.submitterNameTh} />
+                </div>
+              )}
               
               <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
