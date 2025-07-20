@@ -84,7 +84,7 @@ const GenreSelector: React.FC<GenreSelectorProps> = ({
   const isOtherSelected = value.some(genre => !GENRE_OPTIONS.find(option => option.value === genre));
 
   return (
-    <div className={`glass-container rounded-xl sm:rounded-2xl p-6 sm:p-8 ${className}`}>
+    <div className={className}>
       <h3 className={`text-lg sm:text-xl ${getClass('subtitle')} text-white mb-6`}>
         🎭 {label || defaultLabel} {required && <span className="text-red-400">*</span>}
       </h3>

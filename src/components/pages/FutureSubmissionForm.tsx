@@ -390,10 +390,10 @@ const FutureSubmissionForm = () => {
 
           {/* Section 2: Film Information */}
           <FormSection title={currentContent.filmInfoTitle} icon="🎬">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-6">
               {/* Film Title Thai - Only for Thai nationality */}
               {isThaiNationality && (
-                <div className="md:col-span-2">
+                <div>
                   <label className={`block text-white/90 ${getClass('body')} mb-2`}>
                     {currentContent.filmTitleTh} <span className="text-red-400">*</span>
                   </label>
@@ -408,7 +408,7 @@ const FutureSubmissionForm = () => {
                 </div>
               )}
               
-              <div className="md:col-span-2">
+              <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
                   {currentContent.filmTitle} <span className="text-red-400">*</span>
                 </label>
@@ -422,6 +422,7 @@ const FutureSubmissionForm = () => {
                 <ErrorMessage error={formErrors.filmTitle} />
               </div>
               
+              {/* Genre Selector - Full Width */}
               <GenreSelector
                 value={formData.genres}
                 onChange={handleGenreChange}
@@ -429,6 +430,7 @@ const FutureSubmissionForm = () => {
                 required
               />
               
+              {/* Duration Field - Separate Row */}
               <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
                   {currentContent.duration} <span className="text-red-400">*</span>
@@ -447,34 +449,36 @@ const FutureSubmissionForm = () => {
                 </small>
                 <ErrorMessage error={formErrors.duration} />
               </div>
-            </div>
             
-            <div className="mt-6">
-              <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.synopsis} <span className="text-red-400">*</span>
-              </label>
-              <textarea
-                name="synopsis"
-                value={formData.synopsis}
-                onChange={handleInputChange}
-                rows={4}
-                className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.synopsis ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none resize-vertical`}
-              />
-              <ErrorMessage error={formErrors.synopsis} />
-            </div>
+              {/* Synopsis Field */}
+              <div>
+                <label className={`block text-white/90 ${getClass('body')} mb-2`}>
+                  {currentContent.synopsis} <span className="text-red-400">*</span>
+                </label>
+                <textarea
+                  name="synopsis"
+                  value={formData.synopsis}
+                  onChange={handleInputChange}
+                  rows={4}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.synopsis ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none resize-vertical`}
+                />
+                <ErrorMessage error={formErrors.synopsis} />
+              </div>
             
-            <div className="mt-6">
-              <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.chiangmaiConnection} <span className="text-red-400">*</span>
-              </label>
-              <textarea
-                name="chiangmaiConnection"
-                value={formData.chiangmaiConnection}
-                onChange={handleInputChange}
-                rows={3}
-                className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.chiangmaiConnection ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none resize-vertical`}
-              />
-              <ErrorMessage error={formErrors.chiangmaiConnection} />
+              {/* Chiang Mai Connection Field */}
+              <div>
+                <label className={`block text-white/90 ${getClass('body')} mb-2`}>
+                  {currentContent.chiangmaiConnection} <span className="text-red-400">*</span>
+                </label>
+                <textarea
+                  name="chiangmaiConnection"
+                  value={formData.chiangmaiConnection}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.chiangmaiConnection ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none resize-vertical`}
+                />
+                <ErrorMessage error={formErrors.chiangmaiConnection} />
+              </div>
             </div>
           </FormSection>
 
