@@ -192,7 +192,8 @@ const getGenreEmoji = (genre: string): string => {
     'action': '💥',
     'surreal': '🌀',
     'monster': '👹',
-    'magic': '✨',
+    'magic': '🪄',
+    'musical': '🎶',
     'thriller': '🔪'
   };
   
