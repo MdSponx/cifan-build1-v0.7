@@ -11,6 +11,8 @@ interface CrewManagementProps {
   crewMembers: CrewMember[];
   onCrewMembersChange: (crewMembers: CrewMember[]) => void;
   isThaiNationality: boolean;
+  submitterSchoolName?: string;
+  submitterUniversityName?: string;
   error?: string;
   className?: string;
 }
@@ -19,6 +21,8 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
   crewMembers,
   onCrewMembersChange,
   isThaiNationality,
+  submitterSchoolName,
+  submitterUniversityName,
   error,
   className = ''
 }) => {
@@ -40,7 +44,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
     age: '',
     phone: '',
     email: '',
-    schoolName: '',
+    schoolName: submitterSchoolName || submitterUniversityName || '',
     studentId: ''
   });
 
@@ -121,7 +125,10 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
     const errors: FormErrors = {};
     
     if (!crewFormData.fullName.trim()) errors.fullName = validationMessages.required;
-    if (isThaiNationality && !crewFormData.fullNameTh.trim()) errors.fullNameTh = validationMessages.required;
+    // Thai name only required for Thai nationality
+    if (isThaiNationality && !crewFormData.fullNameTh.trim()) {
+      errors.fullNameTh = validationMessages.required;
+    }
     if (!crewFormData.role) errors.role = validationMessages.required;
     if (crewFormData.role === 'Other' && !crewFormData.customRole.trim()) {
       errors.customRole = validationMessages.required;
@@ -130,14 +137,18 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       errors.age = validationMessages.required;
     } else {
       const age = parseInt(crewFormData.age);
-      if (!validateAge(age, 'YOUTH')) errors.age = validationMessages.invalidAge('YOUTH');
+      // Age validation based on form type - passed as prop or determined from context
+      const ageCategory = window.location.hash.includes('future') ? 'FUTURE' : 
+                         window.location.hash.includes('world') ? 'WORLD' : 'YOUTH';
+      if (ageCategory !== 'WORLD' && !validateAge(age, ageCategory)) {
+        errors.age = validationMessages.invalidAge(ageCategory);
+      }
     }
     if (crewFormData.email && !validateEmail(crewFormData.email)) {
       errors.email = validationMessages.invalidEmail;
     }
-    // School name and student ID are now optional
-    // if (!crewFormData.schoolName.trim()) errors.schoolName = validationMessages.required;
-    // if (!crewFormData.studentId.trim()) errors.studentId = validationMessages.required;
+    if (!crewFormData.schoolName.trim()) errors.schoolName = validationMessages.required;
+    // Student ID is not required for crew members
     
     return errors;
   };
@@ -197,7 +208,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       age: '',
       phone: '',
       email: '',
-      schoolName: '',
+      schoolName: submitterSchoolName || submitterUniversityName || '',
       studentId: ''
     });
     setCrewFormErrors({});
