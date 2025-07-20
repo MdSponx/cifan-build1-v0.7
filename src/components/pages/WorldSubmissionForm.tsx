@@ -5,6 +5,7 @@ import { validateEmail, validateAge, getValidationMessages } from '../../utils/f
 import { WorldFormData, FormErrors, SubmissionState, FileUploadState } from '../../types/form.types';
 import { SubmissionService, SubmissionProgress } from '../../services/submissionService';
 import AnimatedButton from '../ui/AnimatedButton';
+import CrewManagement from '../forms/CrewManagement';
 import NationalitySelector from '../ui/NationalitySelector';
 import GenreSelector from '../forms/GenreSelector';
 import FormatSelector from '../forms/FormatSelector';
@@ -47,10 +48,12 @@ const WorldSubmissionForm = () => {
     directorAge: '',
     directorPhone: '',
     directorEmail: '',
+    directorRole: '',
+    directorCustomRole: '',
     occupation: '',
     
-    // Team Information
-    teamMembers: '',
+    // Crew Information
+    crewMembers: [],
     
     // Files
     filmFile: null,
@@ -73,7 +76,6 @@ const WorldSubmissionForm = () => {
       // Sections
       filmInfoTitle: "ข้อมูลภาพยนตร์",
       directorInfoTitle: "ข้อมูลผู้กำกับ",
-      teamInfoTitle: "ข้อมูลทีมงาน",
       filesTitle: "ไฟล์ที่ต้องส่ง",
       
       // Form fields
@@ -87,10 +89,10 @@ const WorldSubmissionForm = () => {
       age: "อายุ",
       phone: "เบอร์โทรศัพท์",
       email: "อีเมล",
+      roleInFilm: "บทบาทในภาพยนตร์",
+      selectRole: "เลือกบทบาท",
+      specifyRole: "ระบุบทบาท",
       occupation: "อาชีพ",
-      
-      teamMembers: "รายชื่อทีมงาน",
-      teamMembersPlaceholder: "ระบุรายชื่อและบทบาทของทีมงาน (ไม่บังคับ)",
       
       filmFile: "ไฟล์ภาพยนตร์ (MP4, MOV)",
       posterFile: "โปสเตอร์ภาพยนตร์ (JPG, PNG)",
@@ -108,7 +110,6 @@ const WorldSubmissionForm = () => {
       // Sections
       filmInfoTitle: "Film Information",
       directorInfoTitle: "Director Information",
-      teamInfoTitle: "Team Information",
       filesTitle: "Required Files",
       
       // Form fields
@@ -122,10 +123,10 @@ const WorldSubmissionForm = () => {
       age: "Age",
       phone: "Phone Number",
       email: "Email",
+      roleInFilm: "Role in Film",
+      selectRole: "Select Role",
+      specifyRole: "Specify Role",
       occupation: "Occupation",
-      
-      teamMembers: "Team Members",
-      teamMembersPlaceholder: "List team members and their roles (optional)",
       
       filmFile: "Film File (MP4, MOV)",
       posterFile: "Film Poster (JPG, PNG)",
@@ -175,6 +176,10 @@ const WorldSubmissionForm = () => {
     } else if (!validateEmail(formData.directorEmail)) {
       errors.directorEmail = validationMessages.invalidEmail;
     }
+    if (!formData.directorRole) errors.directorRole = validationMessages.required;
+    if (formData.directorRole === 'Other' && !formData.directorCustomRole?.trim()) {
+      errors.directorCustomRole = validationMessages.required;
+    }
 
     // Files
     if (!formData.filmFile) errors.filmFile = validationMessages.required;
@@ -216,6 +221,13 @@ const WorldSubmissionForm = () => {
     setFormData(prev => ({ ...prev, format }));
     if (formErrors.format) {
       setFormErrors(prev => ({ ...prev, format: '' }));
+    }
+  };
+
+  const handleCrewMembersChange = (crewMembers: CrewMember[]) => {
+    setFormData(prev => ({ ...prev, crewMembers }));
+    if (formErrors.crewMembers) {
+      setFormErrors(prev => ({ ...prev, crewMembers: '' }));
     }
   };
 
@@ -600,6 +612,43 @@ const WorldSubmissionForm = () => {
               
               <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
+                  {currentContent.roleInFilm} <span className="text-red-400">*</span>
+                </label>
+                <select
+                  name="directorRole"
+                  value={formData.directorRole || ''}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorRole ? 'border-red-400 error-field' : 'border-white/20'} text-white focus:border-[#FCB283] focus:outline-none`}
+                >
+                  <option value="" className="bg-[#110D16]">{currentContent.selectRole}</option>
+                  {['Director', 'Producer', 'Cinematographer', 'Editor', 'Sound Designer', 'Production Designer', 'Costume Designer', 'Makeup Artist', 'Screenwriter', 'Composer', 'Casting Director', 'Visual Effects Supervisor', 'Location Manager', 'Script Supervisor', 'Assistant Director', 'Other'].map(role => (
+                    <option key={role} value={role} className="bg-[#110D16]">
+                      {role}
+                    </option>
+                  ))}
+                </select>
+                <ErrorMessage error={formErrors.directorRole} />
+              </div>
+              
+              {/* Custom Role - only show if Other is selected */}
+              {formData.directorRole === 'Other' && (
+                <div>
+                  <label className={`block text-white/90 ${getClass('body')} mb-2`}>
+                    {currentContent.specifyRole} <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="directorCustomRole"
+                    value={formData.directorCustomRole || ''}
+                    onChange={handleInputChange}
+                    className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.directorCustomRole ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
+                  />
+                  <ErrorMessage error={formErrors.directorCustomRole} />
+                </div>
+              )}
+              
+              <div>
+                <label className={`block text-white/90 ${getClass('body')} mb-2`}>
                   {currentContent.occupation}
                 </label>
                 <input
@@ -615,24 +664,15 @@ const WorldSubmissionForm = () => {
             </FormSection>
           )}
 
-          {/* Section 4: Team Information */}
+          {/* Section 4: Crew Information */}
           {!submissionState.isSubmitting && (
-            <FormSection title={currentContent.teamInfoTitle} icon="👥">
-            <div>
-              <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.teamMembers}
-              </label>
-              <textarea
-                name="teamMembers"
-                value={formData.teamMembers || ''}
-                onChange={handleInputChange}
-                rows={4}
-                placeholder={currentContent.teamMembersPlaceholder}
-                className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.teamMembers ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none resize-vertical`}
-              />
-              <ErrorMessage error={formErrors.teamMembers} />
-            </div>
-            </FormSection>
+            <CrewManagement
+              crewMembers={formData.crewMembers}
+              onCrewMembersChange={handleCrewMembersChange}
+              isThaiNationality={isThaiNationality}
+              error={formErrors.crewMembers}
+              isWorldForm={true}
+            />
           )}
 
           {/* Section 5: File Uploads */}

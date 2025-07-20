@@ -14,6 +14,7 @@ interface CrewManagementProps {
   submitterSchoolName?: string;
   submitterUniversityName?: string;
   error?: string;
+  isWorldForm?: boolean;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
   submitterSchoolName,
   submitterUniversityName,
   error,
+  isWorldForm = false,
   className = ''
 }) => {
   const { i18n } = useTranslation();
@@ -133,21 +135,34 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
     if (crewFormData.role === 'Other' && !crewFormData.customRole.trim()) {
       errors.customRole = validationMessages.required;
     }
-    if (!crewFormData.age) {
-      errors.age = validationMessages.required;
+    
+    // Age validation - only for non-world forms
+    if (!isWorldForm) {
+      if (!crewFormData.age) {
+        errors.age = validationMessages.required;
+      } else {
+        const age = parseInt(crewFormData.age);
+        // Age validation based on form type
+        const ageCategory = window.location.hash.includes('future') ? 'FUTURE' : 'YOUTH';
+        if (!validateAge(age, ageCategory)) {
+          errors.age = validationMessages.invalidAge(ageCategory);
+        }
+      }
     } else {
-      const age = parseInt(crewFormData.age);
-      // Age validation based on form type - passed as prop or determined from context
-      const ageCategory = window.location.hash.includes('future') ? 'FUTURE' : 
-                         window.location.hash.includes('world') ? 'WORLD' : 'YOUTH';
-      if (ageCategory !== 'WORLD' && !validateAge(age, ageCategory)) {
-        errors.age = validationMessages.invalidAge(ageCategory);
+      // For world form, age is still required but no restrictions
+      if (!crewFormData.age) {
+        errors.age = validationMessages.required;
       }
     }
+    
     if (crewFormData.email && !validateEmail(crewFormData.email)) {
       errors.email = validationMessages.invalidEmail;
     }
-    if (!crewFormData.schoolName.trim()) errors.schoolName = validationMessages.required;
+    
+    // School name only required for non-world forms
+    if (!isWorldForm && !crewFormData.schoolName.trim()) {
+      errors.schoolName = validationMessages.required;
+    }
     // Student ID is not required for crew members
     
     return errors;
@@ -347,8 +362,8 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
                 name="age"
                 value={crewFormData.age}
                 onChange={handleCrewInputChange}
-                min="12"
-                max="18"
+                min={isWorldForm ? "1" : "12"}
+                max={isWorldForm ? "100" : window.location.hash.includes('future') ? "25" : "18"}
                 className={`w-full p-3 rounded-lg bg-white/10 border ${crewFormErrors.age ? 'border-red-400' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
               />
               <ErrorMessage error={crewFormErrors.age} />
@@ -384,13 +399,14 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
             
             <div>
               <label className={`block text-white/90 ${getClass('body')} mb-2`}>
-                {currentContent.schoolName} <span className="text-red-400">*</span>
+                {currentContent.schoolName} {!isWorldForm && <span className="text-red-400">*</span>}
               </label>
               <input
                 type="text"
                 name="schoolName"
                 value={crewFormData.schoolName}
                 onChange={handleCrewInputChange}
+                disabled={!isWorldForm}
                 className={`w-full p-3 rounded-lg bg-white/10 border ${crewFormErrors.schoolName ? 'border-red-400' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
               />
               <ErrorMessage error={crewFormErrors.schoolName} />

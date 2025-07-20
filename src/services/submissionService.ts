@@ -388,8 +388,20 @@ export class SubmissionService {
           directorAge: parseInt(worldData.directorAge),
           directorPhone: worldData.directorPhone,
           directorEmail: worldData.directorEmail,
+          directorRole: worldData.directorRole,
+          directorCustomRole: worldData.directorCustomRole || null,
           occupation: worldData.occupation || null,
-          teamMembers: worldData.teamMembers || null
+          crewMembers: (worldData.crewMembers || []).map(member => ({
+            fullName: member.fullName,
+            fullNameTh: member.fullNameTh || null,
+            role: member.role,
+            customRole: member.customRole || null,
+            age: member.age,
+            phone: member.phone || null,
+            email: member.email || null,
+            schoolName: member.schoolName || null,
+            studentId: member.studentId || null
+          }))
         };
       }
 

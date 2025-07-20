@@ -61,10 +61,12 @@ export interface WorldFormData extends BaseFormData {
   directorAge: string;
   directorPhone: string;
   directorEmail: string;
+  directorRole: string;
+  directorCustomRole?: string;
   occupation?: string;
   
-  // Team Information
-  teamMembers?: string;
+  // Crew Information
+  crewMembers: CrewMember[];
   
   // Files
   filmFile: File | null;
