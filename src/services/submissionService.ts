@@ -1,5 +1,6 @@
 import { collection, addDoc, serverTimestamp, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { DURATION_LIMITS } from '../utils/formConstants';
 import { 
   uploadMultipleFiles, 
   deleteFile, 
@@ -42,8 +43,8 @@ const FILE_VALIDATION_RULES: { [key: string]: ValidationRules } = {
   film: {
     maxSize: 500 * 1024 * 1024, // 500MB
     allowedTypes: ['video/mp4', 'video/quicktime'],
-    minDuration: 5,
-    maxDuration: 10
+    minDuration: DURATION_LIMITS.min,
+    maxDuration: DURATION_LIMITS.max
   },
   poster: {
     maxSize: 10 * 1024 * 1024, // 10MB
