@@ -8,16 +8,16 @@ export const FILM_ROLES = [
 
 // Genre options with multi-language support
 export const GENRE_OPTIONS = [
-  { value: 'horror', label: { th: 'สยองขวัญ (Horror)', en: 'Horror' } },
-  { value: 'scifi', label: { th: 'ไซไฟ (Science Fiction)', en: 'Science Fiction' } },
+  { value: 'horror', label: { th: 'สยองขวัญ', en: 'Horror' } },
+  { value: 'scifi', label: { th: 'ไซไฟ', en: 'Science Fiction' } },
   { value: 'fantasy', label: { th: 'แฟนตาซี (Fantasy)', en: 'Fantasy' } },
-  { value: 'dark-comedy', label: { th: 'ดาร์คคอมเมดี้ (Dark Comedy)', en: 'Dark Comedy' } },
-  { value: 'folklore', label: { th: 'Folklore', en: 'Folklore' } },
-  { value: 'action', label: { th: 'แอ็กชัน (Action)', en: 'Action' } },
+  { value: 'dark-comedy', label: { th: 'ดาร์คคอมเมดี้', en: 'Dark Comedy' } },
+  { value: 'folklore', label: { th: 'เรื่องเล่าพื้นบ้าน', en: 'Folklore' } },
+  { value: 'action', label: { th: 'แอ็กชัน', en: 'Action' } },
   { value: 'surreal', label: { th: 'เหนือจริง / อาร์ตแฟนตาสติก', en: 'Surreal / Art Fantastic' } },
   { value: 'monster', label: { th: 'สัตว์ประหลาด / มอนสเตอร์', en: 'Monster' } },
   { value: 'magic', label: { th: 'เวทมนตร์ / ไสยศาสตร์', en: 'Magic / Supernatural' } },
-  { value: 'thriller', label: { th: 'ระทึกขวัญ (Thriller)', en: 'Thriller' } },
+  { value: 'thriller', label: { th: 'ระทึกขวัญ', en: 'Thriller' } },
 ];
 
 // File type configurations
