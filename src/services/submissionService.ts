@@ -47,8 +47,7 @@ const FILE_VALIDATION_RULES: { [key: string]: ValidationRules } = {
   },
   poster: {
     maxSize: 10 * 1024 * 1024, // 10MB
-    allowedTypes: ['image/jpeg', 'image/png'],
-    minResolution: { width: 1080, height: 1080 }
+    allowedTypes: ['image/jpeg', 'image/png']
   },
   proof: {
     maxSize: 5 * 1024 * 1024, // 5MB

@@ -86,22 +86,7 @@ export const validateFile = async (file: File, rules: ValidationRules): Promise<
   }
 
   // Check image resolution if it's an image file
-  if (file.type.startsWith('image/') && rules.minResolution) {
-    try {
-      const dimensions = await getImageDimensions(file);
-      if (dimensions.width < rules.minResolution.width || dimensions.height < rules.minResolution.height) {
-        return {
-          isValid: false,
-          error: `Image resolution must be at least ${rules.minResolution.width}x${rules.minResolution.height}px`
-        };
-      }
-    } catch (error) {
-      return {
-        isValid: false,
-        error: 'Unable to validate image resolution'
-      };
-    }
-  }
+  // Image resolution validation removed - no longer required
 
   return { isValid: true };
 };
