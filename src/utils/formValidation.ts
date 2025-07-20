@@ -32,7 +32,7 @@ export const validateFileType = (file: File, allowedTypes: string[]): boolean =>
 };
 
 // Generic required field validation
-export const validateRequired = (value: string | number | boolean): boolean => {
+export const validateRequired = (value: string | number | boolean | string[]): boolean => {
   if (typeof value === 'string') {
     return value.trim().length > 0;
   }
@@ -41,6 +41,9 @@ export const validateRequired = (value: string | number | boolean): boolean => {
   }
   if (typeof value === 'boolean') {
     return value === true;
+  }
+  if (Array.isArray(value)) {
+    return value.length > 0;
   }
   return false;
 };

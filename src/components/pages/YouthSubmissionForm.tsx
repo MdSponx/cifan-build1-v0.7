@@ -31,7 +31,7 @@ const YouthSubmissionForm = () => {
     // Film Information
     filmTitle: '',
     filmTitleTh: '',
-    genre: '',
+    genres: [],
     duration: '',
     synopsis: '',
     chiangmaiConnection: '',
@@ -149,7 +149,7 @@ const YouthSubmissionForm = () => {
     // Film Information
     if (!formData.filmTitle.trim()) errors.filmTitle = validationMessages.required;
     if (isThaiNationality && !formData.filmTitleTh?.trim()) errors.filmTitleTh = validationMessages.required;
-    if (!formData.genre) errors.genre = validationMessages.required;
+    if (!formData.genres || formData.genres.length === 0) errors.genres = validationMessages.required;
     if (!formData.duration) {
       errors.duration = validationMessages.required;
     } else {
@@ -213,10 +213,10 @@ const YouthSubmissionForm = () => {
     }
   };
 
-  const handleGenreChange = (genre: string) => {
-    setFormData(prev => ({ ...prev, genre }));
-    if (formErrors.genre) {
-      setFormErrors(prev => ({ ...prev, genre: '' }));
+  const handleGenreChange = (genres: string[]) => {
+    setFormData(prev => ({ ...prev, genres }));
+    if (formErrors.genres) {
+      setFormErrors(prev => ({ ...prev, genres: '' }));
     }
   };
 
@@ -290,7 +290,7 @@ const YouthSubmissionForm = () => {
         nationality: formData.nationality,
         filmTitle: formData.filmTitle,
         filmTitleTh: isThaiNationality ? formData.filmTitleTh : null,
-        genre: formData.genre,
+        genres: formData.genres,
         duration: parseInt(formData.duration),
         synopsis: formData.synopsis,
         chiangmaiConnection: formData.chiangmaiConnection,
@@ -421,9 +421,9 @@ const YouthSubmissionForm = () => {
               </div>
               
               <GenreSelector
-                value={formData.genre}
+                value={formData.genres}
                 onChange={handleGenreChange}
-                error={formErrors.genre}
+                error={formErrors.genres}
                 required
               />
               

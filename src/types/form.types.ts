@@ -7,7 +7,7 @@ export interface BaseFormData {
   filmTitle: string;
   filmTitleTh?: string;
   filmTitleEn?: string;
-  genre: string;
+  genres: string[];
   duration: string;
   synopsis: string;
   chiangmaiConnection: string;
