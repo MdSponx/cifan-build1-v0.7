@@ -16,11 +16,6 @@ export const validateAge = (age: number, category: 'YOUTH' | 'FUTURE' | 'WORLD')
   return age >= limits.min && age <= limits.max;
 };
 
-// Duration validation
-export const validateDuration = (duration: number): boolean => {
-  return duration >= DURATION_LIMITS.min && duration <= DURATION_LIMITS.max;
-};
-
 // File size validation
 export const validateFileSize = (file: File, maxSize: number): boolean => {
   return file.size <= maxSize;
@@ -66,9 +61,6 @@ export const getValidationMessages = (language: 'th' | 'en') => {
         ? `อายุต้องอยู่ระหว่าง ${limits.min}-${limits.max} ปี`
         : `Age must be between ${limits.min}-${limits.max} years`;
     },
-    invalidDuration: language === 'th' 
-      ? `ความยาวต้องอยู่ระหว่าง ${DURATION_LIMITS.min}-${DURATION_LIMITS.max} นาที`
-      : `Duration must be between ${DURATION_LIMITS.min}-${DURATION_LIMITS.max} minutes`,
     fileTooLarge: (maxSize: number) => {
       const maxSizeMB = Math.round(maxSize / (1024 * 1024));
       return language === 'th' 

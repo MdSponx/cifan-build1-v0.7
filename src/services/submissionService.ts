@@ -42,9 +42,8 @@ export class SubmissionError extends Error {
 const FILE_VALIDATION_RULES: { [key: string]: ValidationRules } = {
   film: {
     maxSize: 500 * 1024 * 1024, // 500MB
-    allowedTypes: ['video/mp4', 'video/quicktime'],
-    minDuration: DURATION_LIMITS.min,
-    maxDuration: DURATION_LIMITS.max
+    allowedTypes: ['video/mp4', 'video/quicktime']
+    // Removed duration limits - now handled as recommendations only
   },
   poster: {
     maxSize: 10 * 1024 * 1024, // 10MB

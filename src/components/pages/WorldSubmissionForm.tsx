@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTypography } from '../../utils/typography';
-import { validateEmail, validateAge, validateDuration, getValidationMessages } from '../../utils/formValidation';
+import { validateEmail, validateAge, getValidationMessages } from '../../utils/formValidation';
 import { WorldFormData, FormErrors, SubmissionState, FileUploadState } from '../../types/form.types';
 import { SubmissionService, SubmissionProgress } from '../../services/submissionService';
 import AnimatedButton from '../ui/AnimatedButton';
@@ -151,7 +151,9 @@ const WorldSubmissionForm = () => {
       errors.duration = validationMessages.required;
     } else {
       const duration = parseInt(formData.duration);
-      if (!validateDuration(duration)) errors.duration = validationMessages.invalidDuration;
+      if (isNaN(duration) || duration <= 0) {
+        errors.duration = currentLanguage === 'th' ? 'กรุณากรอกความยาวที่ถูกต้อง' : 'Please enter a valid duration';
+      }
     }
     if (!formData.synopsis.trim()) errors.synopsis = validationMessages.required;
     if (!formData.chiangmaiConnection.trim()) errors.chiangmaiConnection = validationMessages.required;
@@ -490,12 +492,11 @@ const WorldSubmissionForm = () => {
                   name="duration"
                   value={formData.duration}
                   onChange={handleInputChange}
-                  min="5"
-                  max="10"
+                  min="1"
                   className={`w-full p-3 rounded-lg bg-white/10 border ${formErrors.duration ? 'border-red-400 error-field' : 'border-white/20'} text-white placeholder-white/50 focus:border-[#FCB283] focus:outline-none`}
                 />
                 <small className="text-white/60 text-xs mt-1 block">
-                  {currentLanguage === 'th' ? 'ระหว่าง 5-10 นาที' : 'Between 5-10 minutes'}
+                  {currentLanguage === 'th' ? 'แนะนำ 5-10 นาที (ไม่บังคับ)' : 'Recommended 5-10 minutes (not mandatory)'}
                 </small>
                 <ErrorMessage error={formErrors.duration} />
               </div>
