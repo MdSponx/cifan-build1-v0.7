@@ -2,6 +2,18 @@ export interface FormErrors {
   [key: string]: string;
 }
 
+export interface FileUploadState {
+  status: 'idle' | 'uploading' | 'success' | 'error';
+  progress: number;
+  error?: string;
+}
+
+export interface SubmissionState {
+  isSubmitting: boolean;
+  progress?: import('../services/submissionService').SubmissionProgress;
+  result?: import('../services/submissionService').SubmissionResult;
+}
+
 export interface BaseFormData {
   // Film Information
   filmTitle: string;

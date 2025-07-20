@@ -1,10 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../firebase';
 import { useTypography } from '../../utils/typography';
 import { validateEmail, validateAge, validateDuration, getValidationMessages } from '../../utils/formValidation';
-import { FutureFormData, CrewMember, FormErrors } from '../../types/form.types';
+import { FutureFormData, CrewMember, FormErrors, SubmissionState, FileUploadState } from '../../types/form.types';
+import { SubmissionService, SubmissionProgress } from '../../services/submissionService';
 import AnimatedButton from '../ui/AnimatedButton';
 import NationalitySelector from '../ui/NationalitySelector';
 import GenreSelector from '../forms/GenreSelector';
@@ -13,6 +12,8 @@ import AgreementCheckboxes from '../forms/AgreementCheckboxes';
 import FormSection from '../forms/FormSection';
 import ErrorMessage from '../forms/ErrorMessage';
 import FileUploader from '../forms/FileUploader';
+import SubmissionProgressComponent from '../ui/SubmissionProgress';
+import FileUploadProgress from '../ui/FileUploadProgress';
 
 const FutureSubmissionForm = () => {
   const { i18n } = useTranslation();
@@ -20,10 +21,16 @@ const FutureSubmissionForm = () => {
   const currentLanguage = i18n.language as 'en' | 'th';
   const validationMessages = getValidationMessages(currentLanguage);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isThaiNationality, setIsThaiNationality] = useState(true);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [submissionState, setSubmissionState] = useState<SubmissionState>({
+    isSubmitting: false
+  });
+  const [fileUploadStates, setFileUploadStates] = useState<{[key: string]: FileUploadState}>({
+    filmFile: { status: 'idle', progress: 0 },
+    posterFile: { status: 'idle', progress: 0 },
+    proofFile: { status: 'idle', progress: 0 }
+  });
   
   const [formData, setFormData] = useState<FutureFormData>({
     nationality: 'Thailand',
@@ -271,6 +278,14 @@ const FutureSubmissionForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Reset submission state
+    setSubmissionState({ isSubmitting: false });
+    setFileUploadStates({
+      filmFile: { status: 'idle', progress: 0 },
+      posterFile: { status: 'idle', progress: 0 },
+      proofFile: { status: 'idle', progress: 0 }
+    });
+    
     const errors = validateMainForm();
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -282,53 +297,76 @@ const FutureSubmissionForm = () => {
       return;
     }
 
-    setIsSubmitting(true);
+    setSubmissionState({ isSubmitting: true });
+
+    // Create submission service with progress callback
+    const submissionService = new SubmissionService((progress: SubmissionProgress) => {
+      setSubmissionState(prev => ({
+        ...prev,
+        progress
+      }));
+
+      // Update file upload states
+      if (progress.fileProgress) {
+        setFileUploadStates(prev => ({
+          filmFile: { 
+            status: progress.fileProgress!.film === 100 ? 'success' : 'uploading', 
+            progress: progress.fileProgress!.film || 0 
+          },
+          posterFile: { 
+            status: progress.fileProgress!.poster === 100 ? 'success' : 'uploading', 
+            progress: progress.fileProgress!.poster || 0 
+          },
+          proofFile: { 
+            status: progress.fileProgress!.proof === 100 ? 'success' : 'uploading', 
+            progress: progress.fileProgress!.proof || 0 
+          }
+        }));
+      }
+    });
 
     try {
-      // Save to Firestore
-      await addDoc(collection(db, 'submissions'), {
-        category: 'future',
-        nationality: formData.nationality,
-        filmTitle: formData.filmTitle,
-        filmTitleTh: isThaiNationality ? formData.filmTitleTh : null,
-        genres: formData.genres,
-        duration: parseInt(formData.duration),
-        synopsis: formData.synopsis,
-        chiangmaiConnection: formData.chiangmaiConnection,
-        submitterName: formData.submitterName,
-        submitterNameTh: isThaiNationality ? formData.submitterNameTh : null,
-        submitterAge: parseInt(formData.submitterAge),
-        submitterPhone: formData.submitterPhone,
-        submitterEmail: formData.submitterEmail,
-        submitterRole: formData.submitterRole,
-        submitterCustomRole: formData.submitterCustomRole || null,
-        universityName: formData.universityName,
-        faculty: formData.faculty,
-        universityId: formData.universityId,
-        crewMembers: formData.crewMembers,
-        agreements: {
-          copyright: formData.agreement1,
-          terms: formData.agreement2,
-          promotional: formData.agreement3,
-          finalDecision: formData.agreement4
-        },
-        submittedAt: serverTimestamp(),
-        status: 'submitted'
-      });
+      const result = await submissionService.submitFutureForm(formData);
+      
+      setSubmissionState(prev => ({
+        ...prev,
+        isSubmitting: false,
+        result
+      }));
 
-      setSubmitSuccess(true);
+      if (result.success) {
+        // Update file states to success
+        setFileUploadStates({
+          filmFile: { status: 'success', progress: 100 },
+          posterFile: { status: 'success', progress: 100 },
+          proofFile: { status: 'success', progress: 100 }
+        });
+      } else {
+        // Update file states to error
+        setFileUploadStates(prev => ({
+          filmFile: { ...prev.filmFile, status: 'error', error: result.error },
+          posterFile: { ...prev.posterFile, status: 'error', error: result.error },
+          proofFile: { ...prev.proofFile, status: 'error', error: result.error }
+        }));
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert(currentLanguage === 'th' 
-        ? 'เกิดข้อผิดพลาดในการส่งผลงาน กรุณาลองใหม่อีกครั้ง' 
-        : 'An error occurred while submitting. Please try again.'
-      );
-    } finally {
-      setIsSubmitting(false);
+      
+      setSubmissionState(prev => ({
+        ...prev,
+        isSubmitting: false,
+        result: {
+          success: false,
+          error: currentLanguage === 'th' 
+            ? 'เกิดข้อผิดพลาดในการส่งผลงาน กรุณาลองใหม่อีกครั้ง' 
+            : 'An error occurred while submitting. Please try again.'
+        }
+      }));
     }
   };
 
-  if (submitSuccess) {
+  // Show success page
+  if (submissionState.result?.success) {
     return (
       <div className="min-h-screen bg-[#110D16] text-white pt-16 sm:pt-20 flex items-center justify-center">
         <div className="glass-container rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center max-w-2xl mx-4">
@@ -338,8 +376,8 @@ const FutureSubmissionForm = () => {
           </h2>
           <p className={`text-white/80 ${getClass('body')} mb-6`}>
             {currentLanguage === 'th' 
-              ? 'ทางเทศกาลจะแจ้งผลการคัดเลือกภายใน 30 วัน ขอบคุณที่ส่งผลงานเข้าร่วม CIFAN 2025'
-              : 'The festival will announce the selection results within 30 days. Thank you for submitting to CIFAN 2025'
+              ? `ทางเทศกาลจะแจ้งผลการคัดเลือกภายใน 30 วัน ขอบคุณที่ส่งผลงานเข้าร่วม CIFAN 2025 (รหัสการส่ง: ${submissionState.result.submissionId})`
+              : `The festival will announce the selection results within 30 days. Thank you for submitting to CIFAN 2025 (Submission ID: ${submissionState.result.submissionId})`
             }
           </p>
           <AnimatedButton 
@@ -382,14 +420,47 @@ const FutureSubmissionForm = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-8">
           
+          {/* Submission Progress */}
+          {submissionState.isSubmitting && submissionState.progress && (
+            <SubmissionProgressComponent 
+              progress={submissionState.progress}
+              className="mb-8"
+            />
+          )}
+
+          {/* Error Display */}
+          {submissionState.result && !submissionState.result.success && (
+            <div className="glass-container rounded-xl p-6 mb-8">
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="text-2xl">❌</span>
+                <h3 className={`${getClass('subtitle')} text-red-400`}>
+                  {currentLanguage === 'th' ? 'เกิดข้อผิดพลาด' : 'Submission Error'}
+                </h3>
+              </div>
+              <p className={`${getClass('body')} text-red-300`}>
+                {submissionState.result.error}
+              </p>
+              <button
+                type="button"
+                onClick={() => setSubmissionState({ isSubmitting: false })}
+                className={`mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white ${getClass('menu')} transition-colors`}
+              >
+                {currentLanguage === 'th' ? 'ลองใหม่' : 'Try Again'}
+              </button>
+            </div>
+          )}
+
           {/* Section 1: Nationality Selector */}
-          <NationalitySelector
-            onNationalityChange={handleNationalityChange}
-            onNationalityTypeChange={handleNationalityTypeChange}
-          />
+          {!submissionState.isSubmitting && (
+            <NationalitySelector
+              onNationalityChange={handleNationalityChange}
+              onNationalityTypeChange={handleNationalityTypeChange}
+            />
+          )}
 
           {/* Section 2: Film Information */}
-          <FormSection title={currentContent.filmInfoTitle} icon="🎬">
+          {!submissionState.isSubmitting && (
+            <FormSection title={currentContent.filmInfoTitle} icon="🎬">
             <div className="space-y-6">
               {/* Film Title Thai - Only for Thai nationality */}
               {isThaiNationality && (
@@ -480,10 +551,12 @@ const FutureSubmissionForm = () => {
                 <ErrorMessage error={formErrors.chiangmaiConnection} />
               </div>
             </div>
-          </FormSection>
+            </FormSection>
+          )}
 
           {/* Section 3: Submitter Information */}
-          <FormSection title={currentContent.submitterInfoTitle} icon="👤">
+          {!submissionState.isSubmitting && (
+            <FormSection title={currentContent.submitterInfoTitle} icon="👤">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>
@@ -639,18 +712,22 @@ const FutureSubmissionForm = () => {
                 <ErrorMessage error={formErrors.universityId} />
               </div>
             </div>
-          </FormSection>
+            </FormSection>
+          )}
 
           {/* Section 4: Crew Management */}
-          <CrewManagement
-            crewMembers={formData.crewMembers}
-            onCrewMembersChange={handleCrewMembersChange}
-            isThaiNationality={isThaiNationality}
-            error={formErrors.crewMembers}
-          />
+          {!submissionState.isSubmitting && (
+            <CrewManagement
+              crewMembers={formData.crewMembers}
+              onCrewMembersChange={handleCrewMembersChange}
+              isThaiNationality={isThaiNationality}
+              error={formErrors.crewMembers}
+            />
+          )}
 
           {/* Section 5: File Uploads */}
-          <FormSection title={currentContent.filesTitle} icon="📁">
+          {!submissionState.isSubmitting && (
+            <FormSection title={currentContent.filesTitle} icon="📁">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FileUploader
                 name="filmFile"
@@ -687,31 +764,65 @@ const FutureSubmissionForm = () => {
                 />
               </div>
             </div>
-          </FormSection>
+            </FormSection>
+          )}
+
+          {/* File Upload Progress */}
+          {submissionState.isSubmitting && (
+            <FormSection title={currentContent.filesTitle} icon="📁">
+              <div className="space-y-4">
+                <FileUploadProgress
+                  fileName={formData.filmFile?.name || 'Film File'}
+                  fileType="film"
+                  progress={fileUploadStates.filmFile.progress}
+                  status={fileUploadStates.filmFile.status}
+                  error={fileUploadStates.filmFile.error}
+                />
+                <FileUploadProgress
+                  fileName={formData.posterFile?.name || 'Poster File'}
+                  fileType="poster"
+                  progress={fileUploadStates.posterFile.progress}
+                  status={fileUploadStates.posterFile.status}
+                  error={fileUploadStates.posterFile.error}
+                />
+                <FileUploadProgress
+                  fileName={formData.proofFile?.name || 'Proof File'}
+                  fileType="proof"
+                  progress={fileUploadStates.proofFile.progress}
+                  status={fileUploadStates.proofFile.status}
+                  error={fileUploadStates.proofFile.error}
+                />
+              </div>
+            </FormSection>
+          )}
 
           {/* Section 6: Agreements */}
-          <AgreementCheckboxes
-            agreements={{
-              agreement1: formData.agreement1,
-              agreement2: formData.agreement2,
-              agreement3: formData.agreement3,
-              agreement4: formData.agreement4
-            }}
-            onChange={handleAgreementChange}
-            error={formErrors.agreements}
-          />
+          {!submissionState.isSubmitting && (
+            <AgreementCheckboxes
+              agreements={{
+                agreement1: formData.agreement1,
+                agreement2: formData.agreement2,
+                agreement3: formData.agreement3,
+                agreement4: formData.agreement4
+              }}
+              onChange={handleAgreementChange}
+              error={formErrors.agreements}
+            />
+          )}
 
           {/* Submit Button */}
-          <div className="text-center pt-8">
+          {!submissionState.isSubmitting && (
+            <div className="text-center pt-8">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={submissionState.isSubmitting}
               className={`w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#AA4626] to-[#FCB283] text-white rounded-lg hover:from-[#FCB283] hover:to-[#AA4626] transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${getClass('menu')} flex items-center justify-center gap-2`}
             >
               <span>🎬</span>
-              {isSubmitting ? currentContent.submitting : currentContent.submitButton}
+              {submissionState.isSubmitting ? currentContent.submitting : currentContent.submitButton}
             </button>
-          </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
