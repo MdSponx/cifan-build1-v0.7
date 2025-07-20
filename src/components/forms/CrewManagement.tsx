@@ -46,7 +46,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
 
   const content = {
     th: {
-      crewInfoTitle: "ข้อมูลทีมงาน",
+      crewInfoTitle: "ข้อมูลทีมงาน (ไม่บังคับ)",
       addCrewMember: "เพิ่มสมาชิกทีมงาน",
       crewMemberForm: "ข้อมูลสมาชิกทีมงาน",
       addMember: "เพิ่มสมาชิก",
@@ -59,8 +59,8 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       phone: "เบอร์โทรศัพท์",
       email: "อีเมล",
       roleInFilm: "บทบาทในภาพยนตร์",
-      schoolName: "ชื่อโรงเรียน",
-      studentId: "รหัสนักเรียน",
+      schoolName: "ชื่อโรงเรียน/มหาวิทยาลัย",
+      studentId: "รหัสนักเรียน/นักศึกษา",
       selectRole: "เลือกบทบาท",
       specifyRole: "ระบุบทบาท",
       optional: "(ไม่บังคับ)",
@@ -80,7 +80,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       confirmDelete: "คุณแน่ใจหรือไม่ที่จะลบสมาชิกคนนี้?"
     },
     en: {
-      crewInfoTitle: "Crew Information",
+      crewInfoTitle: "Crew Information (Optional)",
       addCrewMember: "Add Crew Member",
       crewMemberForm: "Crew Member Information",
       addMember: "Add Member",
@@ -93,7 +93,7 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
       phone: "Phone Number",
       email: "Email",
       roleInFilm: "Role in Film",
-      schoolName: "School Name",
+      schoolName: "School/University Name",
       studentId: "Student ID",
       selectRole: "Select Role",
       specifyRole: "Specify Role",
@@ -135,8 +135,9 @@ const CrewManagement: React.FC<CrewManagementProps> = ({
     if (crewFormData.email && !validateEmail(crewFormData.email)) {
       errors.email = validationMessages.invalidEmail;
     }
-    if (!crewFormData.schoolName.trim()) errors.schoolName = validationMessages.required;
-    if (!crewFormData.studentId.trim()) errors.studentId = validationMessages.required;
+    // School name and student ID are now optional
+    // if (!crewFormData.schoolName.trim()) errors.schoolName = validationMessages.required;
+    // if (!crewFormData.studentId.trim()) errors.studentId = validationMessages.required;
     
     return errors;
   };

@@ -7,6 +7,7 @@ import { SubmissionService, SubmissionProgress } from '../../services/submission
 import AnimatedButton from '../ui/AnimatedButton';
 import NationalitySelector from '../ui/NationalitySelector';
 import GenreSelector from '../forms/GenreSelector';
+import FormatSelector from '../forms/FormatSelector';
 import CrewManagement from '../forms/CrewManagement';
 import AgreementCheckboxes from '../forms/AgreementCheckboxes';
 import FormSection from '../forms/FormSection';
@@ -39,6 +40,7 @@ const YouthSubmissionForm = () => {
     filmTitle: '',
     filmTitleTh: '',
     genres: [],
+    format: '',
     duration: '',
     synopsis: '',
     chiangmaiConnection: '',
@@ -157,6 +159,7 @@ const YouthSubmissionForm = () => {
     if (!formData.filmTitle.trim()) errors.filmTitle = validationMessages.required;
     if (isThaiNationality && !formData.filmTitleTh?.trim()) errors.filmTitleTh = validationMessages.required;
     if (!formData.genres || formData.genres.length === 0) errors.genres = validationMessages.required;
+    if (!formData.format) errors.format = validationMessages.formatRequired;
     if (!formData.duration) {
       errors.duration = validationMessages.required;
     } else {
@@ -188,8 +191,8 @@ const YouthSubmissionForm = () => {
     if (!formData.schoolName.trim()) errors.schoolName = validationMessages.required;
     if (!formData.studentId.trim()) errors.studentId = validationMessages.required;
 
-    // Crew Members
-    if (formData.crewMembers.length === 0) errors.crewMembers = validationMessages.minCrewMembers;
+    // Crew Members (now optional)
+    // if (formData.crewMembers.length === 0) errors.crewMembers = validationMessages.minCrewMembers;
 
     // File uploads
     if (!formData.filmFile) errors.filmFile = validationMessages.required;
@@ -224,6 +227,13 @@ const YouthSubmissionForm = () => {
     setFormData(prev => ({ ...prev, genres }));
     if (formErrors.genres) {
       setFormErrors(prev => ({ ...prev, genres: '' }));
+    }
+  };
+
+  const handleFormatChange = (format: 'live-action' | 'animation') => {
+    setFormData(prev => ({ ...prev, format }));
+    if (formErrors.format) {
+      setFormErrors(prev => ({ ...prev, format: '' }));
     }
   };
 
@@ -497,6 +507,14 @@ const YouthSubmissionForm = () => {
                 value={formData.genres}
                 onChange={handleGenreChange}
                 error={formErrors.genres}
+                required
+              />
+              
+              {/* Format Selector - Full Width */}
+              <FormatSelector
+                value={formData.format}
+                onChange={handleFormatChange}
+                error={formErrors.format}
                 required
               />
               

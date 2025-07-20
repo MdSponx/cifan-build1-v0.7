@@ -294,6 +294,8 @@ export class SubmissionService {
         filmTitle: formData.filmTitle,
         filmTitleTh: (formData as YouthFormData).filmTitleTh || null,
         genres: formData.genres,
+        format: formData.format,
+        format: formData.format,
         duration: parseInt(formData.duration),
         synopsis: formData.synopsis,
         chiangmaiConnection: formData.chiangmaiConnection,

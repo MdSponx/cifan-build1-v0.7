@@ -7,6 +7,7 @@ import { SubmissionService, SubmissionProgress } from '../../services/submission
 import AnimatedButton from '../ui/AnimatedButton';
 import NationalitySelector from '../ui/NationalitySelector';
 import GenreSelector from '../forms/GenreSelector';
+import FormatSelector from '../forms/FormatSelector';
 import CrewManagement from '../forms/CrewManagement';
 import AgreementCheckboxes from '../forms/AgreementCheckboxes';
 import FormSection from '../forms/FormSection';
@@ -39,6 +40,7 @@ const FutureSubmissionForm = () => {
     filmTitle: '',
     filmTitleTh: '',
     genres: [],
+    format: '',
     duration: '',
     synopsis: '',
     chiangmaiConnection: '',
@@ -160,6 +162,7 @@ const FutureSubmissionForm = () => {
     if (!formData.filmTitle.trim()) errors.filmTitle = validationMessages.required;
     if (isThaiNationality && !formData.filmTitleTh?.trim()) errors.filmTitleTh = validationMessages.required;
     if (!formData.genres || formData.genres.length === 0) errors.genres = validationMessages.required;
+    if (!formData.format) errors.format = validationMessages.formatRequired;
     if (!formData.duration) {
       errors.duration = validationMessages.required;
     } else {
@@ -197,8 +200,8 @@ const FutureSubmissionForm = () => {
     if (!formData.posterFile) errors.posterFile = validationMessages.required;
     if (!formData.proofFile) errors.proofFile = validationMessages.required;
 
-    // Crew Members
-    if (formData.crewMembers.length === 0) errors.crewMembers = validationMessages.minCrewMembers;
+    // Crew Members (now optional)
+    // if (formData.crewMembers.length === 0) errors.crewMembers = validationMessages.minCrewMembers;
 
     // Agreements
     if (!formData.agreement1 || !formData.agreement2 || !formData.agreement3 || !formData.agreement4) {
@@ -228,6 +231,13 @@ const FutureSubmissionForm = () => {
     setFormData(prev => ({ ...prev, genres }));
     if (formErrors.genres) {
       setFormErrors(prev => ({ ...prev, genres: '' }));
+    }
+  };
+
+  const handleFormatChange = (format: 'live-action' | 'animation') => {
+    setFormData(prev => ({ ...prev, format }));
+    if (formErrors.format) {
+      setFormErrors(prev => ({ ...prev, format: '' }));
     }
   };
 
@@ -498,6 +508,14 @@ const FutureSubmissionForm = () => {
                 value={formData.genres}
                 onChange={handleGenreChange}
                 error={formErrors.genres}
+                required
+              />
+              
+              {/* Format Selector - Full Width */}
+              <FormatSelector
+                value={formData.format}
+                onChange={handleFormatChange}
+                error={formErrors.format}
                 required
               />
               

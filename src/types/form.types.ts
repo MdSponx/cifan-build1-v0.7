@@ -20,6 +20,7 @@ export interface BaseFormData {
   filmTitleTh?: string;
   filmTitleEn?: string;
   genres: string[];
+  format: 'live-action' | 'animation' | '';
   duration: string;
   synopsis: string;
   chiangmaiConnection: string;

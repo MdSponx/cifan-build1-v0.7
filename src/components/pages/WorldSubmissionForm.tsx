@@ -7,6 +7,7 @@ import { SubmissionService, SubmissionProgress } from '../../services/submission
 import AnimatedButton from '../ui/AnimatedButton';
 import NationalitySelector from '../ui/NationalitySelector';
 import GenreSelector from '../forms/GenreSelector';
+import FormatSelector from '../forms/FormatSelector';
 import AgreementCheckboxes from '../forms/AgreementCheckboxes';
 import FormSection from '../forms/FormSection';
 import ErrorMessage from '../forms/ErrorMessage';
@@ -36,6 +37,7 @@ const WorldSubmissionForm = () => {
     filmTitle: '',
     filmTitleTh: '',
     genres: [],
+    format: '',
     duration: '',
     synopsis: '',
     chiangmaiConnection: '',
@@ -144,6 +146,7 @@ const WorldSubmissionForm = () => {
     if (!formData.filmTitle.trim()) errors.filmTitle = validationMessages.required;
     if (isThaiNationality && !formData.filmTitleTh?.trim()) errors.filmTitleTh = validationMessages.required;
     if (!formData.genres || formData.genres.length === 0) errors.genres = validationMessages.required;
+    if (!formData.format) errors.format = validationMessages.formatRequired;
     if (!formData.duration) {
       errors.duration = validationMessages.required;
     } else {
@@ -201,6 +204,13 @@ const WorldSubmissionForm = () => {
     setFormData(prev => ({ ...prev, genres }));
     if (formErrors.genres) {
       setFormErrors(prev => ({ ...prev, genres: '' }));
+    }
+  };
+
+  const handleFormatChange = (format: 'live-action' | 'animation') => {
+    setFormData(prev => ({ ...prev, format }));
+    if (formErrors.format) {
+      setFormErrors(prev => ({ ...prev, format: '' }));
     }
   };
 
@@ -462,6 +472,14 @@ const WorldSubmissionForm = () => {
                 required
               />
               
+             {/* Format Selector - Full Width */}
+             <FormatSelector
+               value={formData.format}
+               onChange={handleFormatChange}
+               error={formErrors.format}
+               required
+             />
+             
               {/* Duration Field - Separate Row */}
               <div>
                 <label className={`block text-white/90 ${getClass('body')} mb-2`}>

@@ -59,6 +59,7 @@ export const getValidationMessages = (language: 'th' | 'en') => {
   return {
     required: language === 'th' ? 'กรุณากรอกข้อมูลนี้' : 'This field is required',
     invalidEmail: language === 'th' ? 'รูปแบบอีเมลไม่ถูกต้อง' : 'Please enter a valid email address',
+    formatRequired: language === 'th' ? 'กรุณาเลือกรูปแบบภาพยนตร์' : 'Please select film format',
     invalidAge: (category: 'YOUTH' | 'FUTURE' | 'WORLD') => {
       const limits = AGE_LIMITS[category];
       return language === 'th' 
@@ -81,8 +82,8 @@ export const getValidationMessages = (language: 'th' | 'en') => {
       ? `จำนวนคำเกิน ${maxWords} คำ`
       : `Word count exceeds ${maxWords} words`,
     minCrewMembers: language === 'th' 
-      ? 'กรุณาเพิ่มสมาชิกทีมงานอย่างน้อย 1 คน'
-      : 'Please add at least 1 crew member',
+      ? 'สมาชิกทีมงาน (ไม่บังคับ)'
+      : 'Crew members (optional)',
     allAgreementsRequired: language === 'th' 
       ? 'กรุณายอมรับข้อตกลงทั้งหมด'
       : 'Please accept all terms and conditions'
