@@ -102,9 +102,15 @@ export class SubmissionService {
       const submissionError = error as SubmissionError | FileUploadError;
       this.updateProgress('error', 0, submissionError.message);
 
+      // Provide specific guidance for Firebase Storage permission errors
+      let errorMessage = submissionError.message;
+      if (submissionError.code === 'storage-unauthorized') {
+        errorMessage = 'Firebase Storage permission error. Please ensure Storage rules allow read/write access. Contact support if this persists.';
+      }
+
       return {
         success: false,
-        error: submissionError.message,
+        error: errorMessage,
         errorCode: submissionError.code || 'unknown-error'
       };
     }
@@ -140,9 +146,15 @@ export class SubmissionService {
       const submissionError = error as SubmissionError | FileUploadError;
       this.updateProgress('error', 0, submissionError.message);
 
+      // Provide specific guidance for Firebase Storage permission errors
+      let errorMessage = submissionError.message;
+      if (submissionError.code === 'storage-unauthorized') {
+        errorMessage = 'Firebase Storage permission error. Please ensure Storage rules allow read/write access. Contact support if this persists.';
+      }
+
       return {
         success: false,
-        error: submissionError.message,
+        error: errorMessage,
         errorCode: submissionError.code || 'unknown-error'
       };
     }
@@ -178,9 +190,15 @@ export class SubmissionService {
       const submissionError = error as SubmissionError | FileUploadError;
       this.updateProgress('error', 0, submissionError.message);
 
+      // Provide specific guidance for Firebase Storage permission errors
+      let errorMessage = submissionError.message;
+      if (submissionError.code === 'storage-unauthorized') {
+        errorMessage = 'Firebase Storage permission error. Please ensure Storage rules allow read/write access. Contact support if this persists.';
+      }
+
       return {
         success: false,
-        error: submissionError.message,
+        error: errorMessage,
         errorCode: submissionError.code || 'unknown-error'
       };
     }
