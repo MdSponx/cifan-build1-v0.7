@@ -68,6 +68,10 @@ export const validateFile = async (file: File, rules: ValidationRules): Promise<
       if (rules.minDuration && duration < rules.minDuration) {
         return {
           isValid: false,
+        }
+      }
+    }
+  }
   // Image resolution validation removed - no longer required
 
   // Check image resolution if it's an image file
