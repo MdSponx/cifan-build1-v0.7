@@ -389,6 +389,20 @@ export class SubmissionService {
 
       return await addDoc(collection(db, 'submissions'), submissionData);
     } catch (error) {
+      console.error('Firestore save error:', error);
+      
+      // Handle specific Firestore permission errors
+      if (error instanceof Error) {
+        if (error.message.includes('Missing or insufficient permissions') || 
+            error.message.includes('permission-denied')) {
+          throw new SubmissionError(
+            'Database permission error. Please ensure Firestore rules allow write access to the submissions collection. Contact support if this persists.',
+            'firestore-unauthorized',
+            'saving'
+          );
+        }
+      }
+      
       throw new SubmissionError(
         `Failed to save submission: ${error instanceof Error ? error.message : 'Unknown error'}`,
         'firestore-error',
