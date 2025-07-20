@@ -68,22 +68,7 @@ export const validateFile = async (file: File, rules: ValidationRules): Promise<
       if (rules.minDuration && duration < rules.minDuration) {
         return {
           isValid: false,
-          error: `Video duration is ${duration.toFixed(1)} minutes. Recommended: ${rules.minDuration}-${rules.maxDuration} minutes (not mandatory)`
-        };
-      }
-      if (rules.maxDuration && duration > rules.maxDuration) {
-        return {
-          isValid: false,
-          error: `Video duration is ${duration.toFixed(1)} minutes. Recommended: ${rules.minDuration}-${rules.maxDuration} minutes (not mandatory)`
-        };
-      }
-    } catch (error) {
-      return {
-        isValid: false,
-        error: 'Unable to validate video duration'
-      };
-    }
-  }
+  // Image resolution validation removed - no longer required
 
   // Check image resolution if it's an image file
   // Image resolution validation removed - no longer required
