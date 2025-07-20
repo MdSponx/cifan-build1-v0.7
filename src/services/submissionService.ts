@@ -311,7 +311,6 @@ export class SubmissionService {
         filmTitleTh: (formData as YouthFormData).filmTitleTh || null,
         genres: formData.genres,
         format: formData.format,
-        format: formData.format,
         duration: parseInt(formData.duration),
         synopsis: formData.synopsis,
         chiangmaiConnection: formData.chiangmaiConnection,
@@ -355,7 +354,14 @@ export class SubmissionService {
           submitterEmail: (typedFormData as YouthFormData).submitterEmail || (typedFormData as FutureFormData).submitterEmail,
           submitterRole: (typedFormData as YouthFormData).submitterRole || (typedFormData as FutureFormData).submitterRole,
           submitterCustomRole: (typedFormData as YouthFormData).submitterCustomRole || (typedFormData as FutureFormData).submitterCustomRole || null,
-          crewMembers: (typedFormData as YouthFormData).crewMembers || (typedFormData as FutureFormData).crewMembers || []
+          crewMembers: ((typedFormData as YouthFormData).crewMembers || (typedFormData as FutureFormData).crewMembers || []).map(member => ({
+            fullName: member.fullName,
+            fullNameTh: member.fullNameTh || null,
+            role: member.role,
+            customRole: member.customRole || null,
+            phone: member.phone || null,
+            email: member.email || null
+          }))
         };
 
         if (category === 'youth') {
